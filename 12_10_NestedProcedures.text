@@ -1,0 +1,25 @@
+addi $sp, $zero, 6000   # Assume Stack memory starts at 6000. Do not modify.
+
+# Procedure Main (Do not modify)
+Main:
+      add $a0, $zero, $s0
+      add $a1, $zero, $s1
+      
+      jal Sum
+      
+      add $s2, $s0, $s1
+      add $s2, $s2, $v0
+      
+      j End
+
+# Procedure Sum
+Sum:
+      # Type your code here.
+      
+
+# Procedure Dif (Do not modify)
+Dif:
+      sub $v0, $a1, $a0
+      jr $ra
+
+End:
