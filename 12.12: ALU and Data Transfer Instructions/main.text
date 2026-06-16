@@ -1,0 +1,53 @@
+# Enter your code here
+# Write comments explaining your code and all the registers and memory used
+#Since we can save value to $t[i], will save A[0] and A[1]
+lw $t0, 0($s0)
+lw $t1, 4($s0)
+# Now we multiply two registers, when we do that we need two register to save it to for LO and HI (exceeding 32 bits). thats why I don't get why we need HI we now the answer is an integer so why need more than 32 bits? But the intruc did say to save it to two diffrent variables
+mult $t1, $t0
+mflo $t2
+mfhi $t3
+# now that we saved the higher and lower values to, two registers we need to set them into memeory. 
+sw $t2, 8($s0)
+sw $t3, 12($s0)
+#Now were going to this: A[4] = A[2] / 230 first were going to set A[2] and 230 to a register. then divid them. then  set it equal to a register and then finally set the register to a memeory.
+lw $t4, 8($s0)
+addi $t5, $zero, 230
+div $t4, $t5
+mflo $t6
+mfhi $t7 # a
+sw $t6, 16($s0)
+#now were going to get our b by shifting a to the right
+srl $t8, $t7, 16 # b is t8
+# to get c were going to  use &. and since we have a constant invovled well use andi
+andi $t9, $t7, 8 # c is t9
+#to get d we are going to shift left
+sll $t2 , $t7 , 2 # d is t2 now
+# and now we save a,b,c, and d to A[5]
+# first combine B c 
+
+#sll $t8, $t8, 24
+#sll $t9 , $t9, 16
+
+#andi $t8, $t8, 0xFF
+#andi $t9, $t9, 0xFF
+
+#andi $t2, $t2, 0xFFFF
+
+# now we combine b and c. well add it to d
+
+#sh $t2, 22($s0)
+#sb $t9, 21($s0)
+#sb $t8, 20($s0)
+
+sll $t8, $t8, 24
+sll $t9, $t9, 16
+# andi $t2, $t2, 0xFFFF
+sll $t2, $t2, 16
+srl $t2, $t2, 16
+
+or $t8, $t8, $t9
+or $t8, $t8, $t2
+
+# now store it in A[5]
+sw $t8, 20($s0)
