@@ -1,0 +1,68 @@
+# STILL NEEDS TO BE FIXED
+
+
+# Enter your MIPS code below. 
+# Write short comments explaining each line of your code 
+# Explain your use of labels and functions
+# Main:
+      # intitilize all varibles to t register to use
+Main: add $a0,$zero, $s0 # head is a0
+      #addi $a1,$zero, $s2 # n is a1
+      add $a2,$zero, $s1 # newNode is a2
+      jal addNode
+      add $s3, $zero, $v0
+      addi $v0, $zero, 10
+      j exitF
+      
+        # since addNode is a nested loop, caller and a calle we are going to store things in sp
+addNode: addi $sp,$sp, -16
+         sw $ra, 12($sp)
+         sw $a0, 8($sp)
+         #sw $a1, 4($sp)
+         sw $a2, 4($sp)
+         
+         #if condition: n = 0
+         beq $s2, $zero, ifFunction # go to ifFunction if a1, or n is equal to 0. if not then it means where in the body and just keep fullowing the rest of lines
+         
+         # else
+         jal findNode
+         #handling finding the n'th node and then and getting its address
+         lw $a2, 4($sp)
+         sw $a2, 4($v0)
+         sw $v1, 4($a2)
+         
+         j done
+         
+            #?
+ifFunction: sw $a0, 4($a2)
+            # head = newNode
+            add $s0, $zero, $a2
+            #add $v0, $zero, $s0
+            
+            # return statment for addnode
+done:       lw $a2, 4($sp)
+            lw $v0, 0($a2)
+            
+            lw $ra, 12($sp)
+            jr $ra
+
+         # initilize variables   
+findNode: add $t0, $zero, $a0
+          addi $t1, $zero, 1
+          
+          # now we starte the loop in Find NOde
+findNodeLoop: bge $t1, $s2, exit
+              #updating the pointer
+              lw $t2, 4($t0)
+              beq $t2, $zero, exit # break the loop if end of list
+              add $t0,$zero,$t2 
+              addi $t1, $t1, 1 # increment
+              j findNodeLoop
+             
+             
+             
+exit:        add $v0, $zero, $t0 #addr1 = curr
+             lw $v1, 4($t0) # addr2 = curr > next
+             jr $ra
+             
+exitF:
