@@ -1,0 +1,85 @@
+# StILL NEEDS TO BE FIXED
+
+
+
+# Change your C code here (if different)
+#int main() {
+#    B[0] = 1;    // 0th element = A[0]^0 = 1
+#    for (int j = 1; j < n1; j++) {
+#        n2 = j;    // Current length of array B
+#        exp = exponent(A[j], j);
+#        append(B, n2, exp);
+#    }
+#    n2++;
+#  }
+#int exponent(int x, int y) {
+#    int exp = x;
+#    for (int j = 1; j < y; j++) {
+#        exp = exp * x;
+#    }
+#    return(exp);
+#}
+#void append(int* B, int n2, int exp) {
+#    B[n2] = exp;
+#} 
+
+# Write comments explaining each line of your code, all the registers and memory used
+# Enter your MIPS code here
+
+# Main:
+# set t0 as 1 
+Main:  addi $t0, $zero, 1
+       # store t0 or 1 into B[0]
+       sw $t0, 0($s2)
+
+       # set t2 to j. for now 1
+       addi $t2,$zero, 1
+       # now we set the loop, and exit if it dones't match th logic
+MLoop: bge $t2, $s1, exit
+       # we set n2 = to j
+       addi $s3, $t2, 0
+       
+       
+       #now we do the A[i]^i
+       # first grab A[i], or A[j]
+       sll $t3, $t2, 2 # j * 4: the 2 is for 2 to the power 'the' 2 we put. we are moving index of 4 so to get 2^2 we use 2 as the power.
+       # now we actully get the address:
+       add $t3, $t3, $s0  # A[i] = A + (i *4) , we got (i *4) form the prvious line
+       # now e load what we just got into memory
+       lw $t5, 0($t3)
+       # save the exponent into t5
+       add $t6,$t2, $zero
+       
+       jal expo #the return value will be in t7
+       
+       
+       jal append # go to the eppend function 
+       # add 1 to j after ever loop
+       addi $s3, $s3, 1
+       addi $t2, $t2, 1
+       j MLoop
+       
+       
+       
+
+       
+       
+       
+# exp functiong: setting $t7 to a[i]
+expo:  add $t7, $t5, $zero
+       addi $t9, $zero, 1 # re initilizing, just in case
+       
+expoLoop: bge $t9,$t6, expoD
+          mul $t7, $t7,$t5 # multiplying exponent with A[i]
+          addi $t9, $t9, 1
+          j expoLoop
+          
+
+expoD: jr $ra
+
+append:sll $t8, $s3, 2  #t8 is now stores offset
+       add $t8, $t8, $s2  # t8 now contains b[n2]
+       sw $t7, 0($t8) # storing t7 into b array
+       jr $ra 
+       
+exit:  
