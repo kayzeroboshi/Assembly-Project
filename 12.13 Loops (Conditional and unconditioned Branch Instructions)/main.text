@@ -1,0 +1,57 @@
+# Change the C code here if you have used something different from the one given.
+
+#int i = 0;
+#while (i < n) { 
+#   if (A[i] != val)                // If no match, proceed with next element
+#      i++;
+#   else {
+#      for (int k = i; k < n - 1; k++)  // Shift elements if a match is found       
+#         A[k] = A[k+1];          
+#      n = n - 1;            // if element deleted, length of array decreases
+#   }
+#}
+
+
+# Enter your MIPS code below. 
+# Write short comments explaining 
+# each line of your code 
+# Explain your use of labels
+
+#store 0 into $t0. in code this would be setting a varible to 0
+Init: addi  $t0, $zero, 0 # i is t0
+
+#while loop : ---> start
+Floop:   bge $t0, $s1, Exit #were going to add exit in the end
+
+         # in the while loop: get addresss of A[i]
+         sll $t2, $t0, 2
+         add $t3, $s0, $t2
+         lw $t4, 0($t3) #  putting A[i] into t4
+
+         # in while loop and now creating if statement
+         beq $t4, $s2, Else # we can worry about else later
+         # in the while loop: in the if statement: adding 1 to i
+Update:  addi $t0, $t0, 1
+         # now we repeat the while loop
+         j Floop
+
+#Now were going to handle the Else case
+Else:    add $t5, $t0 , $zero # t5 is k
+# entering the for loop in the else statment. We initlized k by setting it equal to i the the privous line, now were oging to initilize n-1 and then use bge to check if k is < n- 1:
+Sloop:   addi $t6, $s1 , -1 # t6 is n-1
+         bge $t5, $t6, Decrease #we'll handle the decrease function later
+         
+         # we'll handle A[k] = A[k+1]
+         sll $t7, $t5, 2
+         add $t7, $t7, $s0
+         lw $t8, 4($t7)
+         sw $t8, 0($t7) # t8 is equal to a[k]. and a[k] is eqeal to A[k+1]
+         
+         #now we just add 1 to k and continue the loop
+         addi $t5, $t5, 1 # just k++ 
+         j Sloop
+# The decrease function is going to decrease the length of the array.          
+Decrease:addi $s1, $s1, -1
+         j Floop
+         
+Exit:
